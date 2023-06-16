@@ -6,7 +6,7 @@ OUTPUT_DIR=./output
 vrtfile=${OUTPUT_DIR}/gebco_color_releif.vrt
 vrtfile2=${OUTPUT_DIR}/gebco_color_releif2.vrt
 vrtfile3=${OUTPUT_DIR}/gebco_color_releif3.vrt
-mbtilesfile=${OUTPUT_DIR}/gebco_color_releif.mbtiles
+mbtiles=${OUTPUT_DIR}/gebco_color_releif.mbtiles
 
 [ -d "$OUTPUT_DIR" ] || mkdir -p $OUTPUT_DIR || { echo "error: $OUTPUT_DIR " 1>&2; exit 1; }
 
@@ -17,12 +17,12 @@ gdaldem color-relief -of VRT ${vrtfile} -alpha ramp_bathymetry.ramp ${vrtfile2}
 echo "Builing gdalwarp VRT"
 gdalwarp -r cubic -s_srs epsg:4326 -t_srs EPSG:3857 ${vrtfile2} ${vrtfile3}
 echo "Import VRT into MBTiles"
-gdal_translate ${vrtfile3} ${mbtilesfile} -of MBTILES 
+gdal_translate ${vrtfile3} ${mbtiles} -of MBTILES 
 #echo "Backup Origional MBTiles file"
-#cp ${mbtilesfile} ${mbtilesfile}.orig
+#cp ${mbtiles} ${mbtiles}.orig
 echo "Create MBTiles Overview"
-gdaladdo ${mbtilesfile}
+gdaladdo ${mbtiles}
 
-sqlite3 ${mbtilesfile} "UPDATE metadata SET value = 'GEBCO (2023) converted with gdaldem' WHERE name = 'description';"
-sqlite3 ${mbtilesfile} "UPDATE metadata SET value = 'baselayer' WHERE name = 'type';"
-sqlite3 ${mbtilesfile} "INSERT INTO metadata ('name','value') VALUES('attribution','GEBCO (2023)');"
+sqlite3 ${mbtiles} "UPDATE metadata SET value = 'GEBCO (2023) converted with gdaldem' WHERE name = 'description';"
+sqlite3 ${mbtiles} "UPDATE metadata SET value = 'baselayer' WHERE name = 'type';"
+sqlite3 ${mbtiles} "INSERT INTO metadata ('name','value') VALUES('attribution','GEBCO (2023)');"
