@@ -15,7 +15,7 @@ gdalbuildvrt -overwrite ${vrtfile} ${INPUT_DIR}/*.tif
 gdalwarp -r cubic -s_srs epsg:4326 -t_srs EPSG:3857 -dstnodata 0 ${vrtfile} ${vrtfile2}
 rio rgbify -b -20000 -i 0.03 --min-z 0 --max-z 8 -j 24 --format png ${vrtfile2} ${mbtiles} #Use with exaggeration of ~0.3 in maplibre terrain/hillshade
 
-sqlite3 ${mbtiles} "UPDATE metadata SET value = 'gebco_terrainrgb_0-9' WHERE name = 'name' AND value = '';"
+sqlite3 ${mbtiles} "UPDATE metadata SET value = 'gebco_terrainrgb_0-8' WHERE name = 'name' AND value = '';"
 sqlite3 ${mbtiles} "UPDATE metadata SET value = 'GEBCO (2023) converted with rio rgbify' WHERE name = 'description';"
 sqlite3 ${mbtiles} "UPDATE metadata SET value = 'png' WHERE name = 'format';"
 sqlite3 ${mbtiles} "UPDATE metadata SET value = '1' WHERE name = 'version';"
