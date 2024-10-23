@@ -23,6 +23,8 @@ gdal_translate ${vrtfile3} ${mbtiles} -of MBTILES
 echo "Create MBTiles Overview"
 gdaladdo ${mbtiles}
 
-sqlite3 ${mbtiles} "UPDATE metadata SET value = 'GEBCO (2023) converted with gdaldem' WHERE name = 'description';"
+sqlite3 ${mbtiles} 'CREATE UNIQUE INDEX tile_index on tiles (zoom_level, tile_column, tile_row);'
+sqlite3 ${mbtiles} "UPDATE metadata SET value = 'GEBCO (2024) converted with gdaldem' WHERE name = 'description';"
 sqlite3 ${mbtiles} "UPDATE metadata SET value = 'baselayer' WHERE name = 'type';"
-sqlite3 ${mbtiles} "INSERT INTO metadata ('name','value') VALUES('attribution','GEBCO (2023)');"
+sqlite3 ${mbtiles} "INSERT INTO metadata ('name','value') VALUES('attribution','GEBCO (2024)');"
+sqlite3 ${mbtiles} "INSERT INTO metadata (name,value) VALUES('center','0,0,4');"
